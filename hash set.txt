@@ -1,0 +1,25 @@
+class Solution{
+    public:
+    //Function to return the count of number of elements in union of two arrays.
+    int doUnion(int a[], int n, int b[], int m)  {
+        //code here
+        int arr[256]={0},z=0;
+        for(int i=0;i<n;i++)
+        {
+            arr[a[i]]++;
+        }
+        for(int i=0;i<m;i++)
+        {
+            arr[b[i]]++;
+        }
+        for(int i=0;i<256;i++)
+        {
+            if(arr[i]!=0)
+            {
+                //cout<<i<<" ";
+                z++;
+            }
+        }
+        return z;
+    }
+};
