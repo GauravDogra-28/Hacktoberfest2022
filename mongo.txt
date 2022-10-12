@@ -1,0 +1,29 @@
+
+docker run -it --rm --name zookeeper -p 2181:2181 -p 2888:2888 -p 3888:3888 debezium/zookeeper:0.9
+
+docker run -it --rm --name kafka -p 9092:9092 --link zookeeper:zookeeper debezium/kafka:0.9
+
+docker run -it --rm --name mysql -p 3360:3306 -e MYSQL_ROOT_PASSWORD=debezium -e MYSQL_USER=mysqluser -e MYSQL_PASSWORD=mysqlpw debezium/example-mysql:0.9
+
+docker run --name mongodb -d -p 27017:27017 mongo
+
+docker run -it --rm --name connect -p 8083:8083 -e GROUP_ID=1 -e CONFIG_STORAGE_TOPIC=my_connect_configs -e OFFSET_STORAGE_TOPIC=my_connect_offsets -e STATUS_STORAGE_TOPIC=my_connect_statuses --link zookeeper:zookeeper --link kafka:kafka --link mysql:mysql --link mongodb:mongodb debezium/connect:0.9
+
+
+docker cp C:\Users\Dell\Downloads\mongodb-kafka-connect-mongodb-1.6.1\kafka-connect-jdbc\ connect:/kafka/connect/
+
+docker exec -it connect /bin/bash
+
+cd connect/kafka-connect-jdbc/
+
+ls -all
+
+docker run -it --rm --name connect -p 8083:8083 -e GROUP_ID=1 -e CONFIG_STORAGE_TOPIC=my_connect_configs -e OFFSET_STORAGE_TOPIC=my_connect_offsets -e STATUS_STORAGE_TOPIC=my_connect_statuses --link zookeeper:zookeeper --link kafka:kafka --link mysql:mysql --link elasticdbz:elasticdbz --link mongodb:mongodb debezium/connect:0.9
+
+docker cp C:\Users\Dell\Downloads\confluentinc-kafka-connect-jdbc-10.3.3\kafka-connect-jdbc\ connect:/kafka/connect/
+
+docker exec -it connect /bin/bash
+
+cd connect/kafka-connect-jdbc/
+
+ls -all
