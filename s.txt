@@ -1,0 +1,44 @@
+{
+     "name": "jdbc_source_mysql_01",
+     "config": {
+             "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+             "connection.url": "jdbc:mysql://mysql:3306/test",
+             "connection.user": "connect_user",
+             "connection.password": "connect_password",
+             "topic.prefix": "mysql-01-",
+             "poll.interval.ms" : 3600000,
+             "table.whitelist" : "test.accounts",
+             "mode":"bulk",
+             "transforms":"createKey,extractInt",
+             "transforms.createKey.type":"org.apache.kafka.connect.transforms.ValueToKey",
+             "transforms.createKey.fields":"id",
+             "transforms.extractInt.type":"org.apache.kafka.connect.transforms.ExtractField$Key",
+             "transforms.extractInt.field":"id"
+             }
+     }
+
+
+
+     {"name": "mongo-source",
+      "config": {
+         "connector.class":"com.mongodb.kafka.connect.MongoSourceConnector",
+         "connection.uri":"mongodb://mongo1:27017/?replicaSet=rs0",
+         "database":"quickstart",
+         "collection":"sampleData",
+         "pipeline":"[{\"$match\": {\"operationType\": \"insert\"}}, {$addFields : {\"fullDocument.travel\":\"MongoDB Kafka Connector\"}}]"
+         }
+     }
+
+
+{
+  "name": "jdbc-sink-connector",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "tasks.max": "1",
+    "topics": "abc.test",
+    "connection.url": "jdbc:mysql://mysql:3306/a",
+    "connection.user": "root",
+    "connection.password": "debezium",
+    "insert.mode.databaselevel": true
+  }
+}
