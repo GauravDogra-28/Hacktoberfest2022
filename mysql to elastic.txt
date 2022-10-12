@@ -1,0 +1,28 @@
+
+docker run -it --rm --name zookeeper -p 2181:2181 -p 2888:2888 -p 3888:3888 debezium/zookeeper:0.9
+
+docker run -it --rm --name kafka -p 9092:9092 --link zookeeper:zookeeper debezium/kafka:0.9
+
+docker run -it --rm --name mysql -p 3360:3306 -e MYSQL_ROOT_PASSWORD=debezium -e MYSQL_USER=mysqluser -e MYSQL_PASSWORD=mysqlpw debezium/example-mysql:0.9
+
+docker run -it --name elasticdbz -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.1.1
+
+docker run -it --rm --name connect -p 8083:8083 -e GROUP_ID=1 -e CONFIG_STORAGE_TOPIC=my_connect_configs -e OFFSET_STORAGE_TOPIC=my_connect_offsets -e STATUS_STORAGE_TOPIC=my_connect_statuses --link zookeeper:zookeeper --link kafka:kafka --link mysql:mysql --link elasticdbz:elasticdbz debezium/connect:0.9
+
+curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d '{ "name": "inventory-connector", "config": { "connector.class": "io.debezium.connector.mysql.MySqlConnector", "tasks.max": "1", "database.hostname": "mysql", "database.port": "3306", "database.user": "debezium", "database.password": "dbz", "database.server.id": "184054", "database.server.name": "dbserver1", "database.whitelist": "inventory", "database.history.kafka.bootstrap.servers": "kafka:9092", "database.history.kafka.topic": "dbhistory.inventory" } }'
+
+ curl -H "Accept:application/json" localhost:8083/connectors/
+
+https://www.confluent.io/hub/confluentinc/kafka-connect-elasticsearch?_ga=2.35329313.1613612321.1644481424-1277981390.1644316055
+
+kafka-connect-jdbc
+
+ docker cp C:\Users\Dell\Downloads\confluentinc-kafka-connect-elasticsearch-5.5.0\kafka-connect-jdbc\ connect:/kafka/connect/
+
+ docker exec -it connect /bin/bash
+  cd connect/kafka-connect-jdbc/
+
+ ls -all
+
+mysql -u root -p 
+fng-efqo-qha
